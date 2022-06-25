@@ -18,7 +18,7 @@ router.post('/', (req, res) => {
     }
 
     const fileName = filepath.split('\\').pop().split('/').pop();
-    const media = await Media.create({ image: `image/${fileName}` });
+    const media = await Media.create({ image: `images/${fileName}` });
 
     return res.json({
       status: 'success',
@@ -27,6 +27,22 @@ router.post('/', (req, res) => {
         image: `${req.get('host')}/images/${fileName}`,
       },
     });
+  });
+});
+
+router.get('/', async (req, res) => {
+  const media = await Media.findAll({
+    attributes: ['id', 'image'],
+  });
+
+  const mappedMedia = media.map((m) => {
+    m.image = `${req.get('host')}/${m.image}`;
+    return m;
+  });
+
+  return res.json({
+    status: 'success',
+    data: mappedMedia,
   });
 });
 
