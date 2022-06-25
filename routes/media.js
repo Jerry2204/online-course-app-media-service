@@ -1,9 +1,16 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const isBase64 = require('is-base64');
+const base64Img = require('base64-img');
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+router.post('/', (req, res) => {
+  const image = req.body.image;
+
+  if (!isBase64(image, { mimeRequired: true })) {
+    return res.status(400).json({ status: 'error', message: 'Invalid base64' });
+  }
+
+  return res.send('ok');
 });
 
 module.exports = router;
